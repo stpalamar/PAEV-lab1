@@ -5,7 +5,7 @@ import {
   quadraticHash,
 } from './utils';
 
-type Vote = {
+export type Vote = {
   encryptedVote: number[];
   signature: bigint;
   publicKey: { e: number; n: number };
@@ -24,11 +24,25 @@ class Cvk {
     this.candidates = candidates;
   }
 
-  addVote(vote: {
-    encryptedVote: number[];
-    signature: bigint;
-    publicKey: { e: number; n: number };
-  }): Vote {
+  addVote(vote: Vote): Vote {
+    if (this.votes.find((v) => v.publicKey === vote.publicKey)) {
+      throw new Error('This voter has already voted');
+    }
+
+    const verifySignature = this.verifySignature(
+      vote.encryptedVote,
+      vote.signature,
+      vote.publicKey
+    );
+    if (!verifySignature) {
+      throw new Error('Invalid signature');
+    }
+
+    const decryptedVote = this.decryptVote(vote.encryptedVote);
+    if (!this.candidates.includes(decryptedVote)) {
+      throw new Error('Invalid vote');
+    }
+
     this.votes.push(vote);
     return vote;
   }

@@ -15,6 +15,7 @@ class Cvk {
   publicKey: { e: number; n: number };
   privateKey: { d: number; n: number };
   candidates: string[];
+  voterPublicKeys: { e: number; n: number }[] = [];
   votes: Vote[] = [];
 
   constructor(candidates: string[]) {
@@ -25,6 +26,10 @@ class Cvk {
   }
 
   addVote(vote: Vote): Vote {
+    if (!this.voterPublicKeys.find((v) => v === vote.publicKey)) {
+      throw new Error('This voter is not registered');
+    }
+
     if (this.votes.find((v) => v.publicKey === vote.publicKey)) {
       throw new Error('This voter has already voted');
     }
@@ -46,6 +51,10 @@ class Cvk {
     this.votes.push(vote);
     return vote;
   }
+
+  registerVoter = (voterPublicKey: { e: number; n: number }): void => {
+    this.voterPublicKeys.push(voterPublicKey);
+  };
 
   verifySignature(
     encryptedVote: number[],

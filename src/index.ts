@@ -8,6 +8,11 @@ const voter2 = new Voter('Voter 2', cvk.publicKey);
 const voter3 = new Voter('Voter 3', cvk.publicKey);
 const voter4 = new Voter('Voter 4', cvk.publicKey);
 
+cvk.registerVoter(voter1.publicKey);
+cvk.registerVoter(voter2.publicKey);
+cvk.registerVoter(voter3.publicKey);
+cvk.registerVoter(voter4.publicKey);
+
 cvk.addVote(voter1.vote(cvk.candidates[0]));
 cvk.addVote(voter2.vote(cvk.candidates[0]));
 cvk.addVote(voter3.vote(cvk.candidates[1]));

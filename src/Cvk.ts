@@ -1,12 +1,15 @@
 import generateRSAKeyPair from './RSAKeyGenerator';
 import {
   binaryArrayToString,
-  privateKeyToBinaryArray,
   publicKeyToBinaryArray,
   quadraticHash,
 } from './utils';
 
-type Vote = { encryptedVote: number[]; signature: bigint };
+type Vote = {
+  encryptedVote: number[];
+  signature: bigint;
+  publicKey: { e: number; n: number };
+};
 
 class Cvk {
   publicKey: { e: number; n: number };
@@ -21,7 +24,11 @@ class Cvk {
     this.candidates = candidates;
   }
 
-  addVote(vote: { encryptedVote: number[]; signature: bigint }): Vote {
+  addVote(vote: {
+    encryptedVote: number[];
+    signature: bigint;
+    publicKey: { e: number; n: number };
+  }): Vote {
     this.votes.push(vote);
     return vote;
   }
@@ -37,17 +44,13 @@ class Cvk {
     return hash === Number(decryptedSignature);
   }
 
-  decryptVote(
-    encryptedVote: number[],
-    cvkPrivateKey: { d: number; n: number },
-    cvkPublicKey: { e: number; n: number }
-  ): string {
+  decryptVote(encryptedVote: number[]): string {
     // Отримуємо бінарний вигляд приватного ключа ЦВК
-    const cvkPrivateKeyBits: number[] = publicKeyToBinaryArray(cvkPublicKey);
+    const cvkPublicKeyBits: number[] = publicKeyToBinaryArray(this.publicKey);
 
-    // Розшифровуємо гамований голос, використовуючи приватний ключ ЦВК як розшифровувальний ключ
+    // Розшифровуємо гамований голос, використовуючи публічний ключ ЦВК як розшифровувальний ключ
     const decryptedVote: number[] = encryptedVote.map(
-      (bit, index) => bit ^ cvkPrivateKeyBits[index]
+      (bit, index) => bit ^ cvkPublicKeyBits[index]
     );
 
     // Перетворюємо бінарний масив назад в рядок

@@ -19,10 +19,14 @@ class Voter {
     this.privateKey = privateKey;
   }
 
-  vote(canditateName: string): { encryptedVote: number[]; signature: bigint } {
+  vote(canditateName: string): {
+    encryptedVote: number[];
+    signature: bigint;
+    publicKey: { e: number; n: number };
+  } {
     const encryptedVote = this.encryptVote(canditateName, this.cvkPublicKey);
     const signature = this.createSignature(encryptedVote, this.privateKey);
-    return { encryptedVote, signature };
+    return { encryptedVote, signature, publicKey: this.publicKey };
   }
 
   encryptVote(

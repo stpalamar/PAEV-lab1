@@ -4,6 +4,7 @@ import {
   publicKeyToBinaryArray,
   quadraticHash,
 } from './utils';
+import { Vote } from './Cvk';
 
 class Voter {
   name: string;
@@ -19,11 +20,7 @@ class Voter {
     this.privateKey = privateKey;
   }
 
-  vote(canditateName: string): {
-    encryptedVote: number[];
-    signature: bigint;
-    publicKey: { e: number; n: number };
-  } {
+  vote(canditateName: string): Vote {
     const encryptedVote = this.encryptVote(canditateName, this.cvkPublicKey);
     const signature = this.createSignature(encryptedVote, this.privateKey);
     return { encryptedVote, signature, publicKey: this.publicKey };

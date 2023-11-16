@@ -19,10 +19,6 @@ class Voter {
     this.privateKey = privateKey;
   }
 
-  getPublicKey(): { e: number; n: number } {
-    return this.publicKey;
-  }
-
   vote(canditateName: string): { encryptedVote: number[]; signature: bigint } {
     const encryptedVote = this.encryptVote(canditateName, this.cvkPublicKey);
     const signature = this.createSignature(encryptedVote, this.privateKey);
@@ -58,6 +54,10 @@ class Voter {
     const voteHash = quadraticHash(encryptedVote, modulus);
     const signature = BigInt(voteHash) ** BigInt(exponent) % BigInt(modulus);
     return signature;
+  }
+
+  getPublicKey(): { e: number; n: number } {
+    return this.publicKey;
   }
 }
 

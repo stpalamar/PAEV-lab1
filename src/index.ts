@@ -18,6 +18,8 @@ cvk.addVote(voter2.vote(cvk.candidates[0]));
 cvk.addVote(voter3.vote(cvk.candidates[1]));
 cvk.addVote(voter4.vote(cvk.candidates[2]));
 
+console.log(cvk.checkMyVote(voter4.publicKey));
+
 console.log(
   cvk.votes.map((vote) => {
     const isValidSignature = cvk.verifySignature(

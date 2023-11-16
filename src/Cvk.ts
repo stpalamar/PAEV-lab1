@@ -56,6 +56,14 @@ class Cvk {
     this.voterPublicKeys.push(voterPublicKey);
   };
 
+  checkMyVote = (voterPublicKey: { e: number; n: number }): string => {
+    const vote = this.votes.find((v) => v.publicKey === voterPublicKey);
+    if (!vote) {
+      return 'Your vote is not counted';
+    }
+    return 'Your vote is counted';
+  };
+
   verifySignature(
     encryptedVote: number[],
     signature: bigint,

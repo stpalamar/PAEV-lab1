@@ -1,4 +1,3 @@
-import { get } from 'http';
 import { Ballot } from './types';
 import ElGamal from 'elgamal';
 import * as crypto from 'crypto';
